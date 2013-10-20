@@ -1,0 +1,79 @@
+
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+    <script src="js/three.min.js"></script>
+      <script src="js/OrbitControls.js"></script>
+    <script defer="defer">
+      
+    var scene, camera, renderer;
+
+        
+    function init() {
+      // renderer
+      renderer = new THREE.WebGLRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+ 
+      // camera
+      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+      camera.position.z = 500;      
+ 
+      // scene
+      scene = new THREE.Scene();
+        
+        
+     // earth    
+      var sphereGeo, sphereTex, sphereMat, sphereMesh;
+      var radius = 150, segments = 32, rings = 32;
+        
+      sphereGeo = new THREE.SphereGeometry(radius, segments, rings);
+        sphereTex = THREE.ImageUtils.loadTexture("textures/earth_atmos_2048.jpg", null, function () {               sphereMat = new THREE.MeshBasicMaterial({map: sphereTex});
+        sphereMesh = new THREE.Mesh(sphereGeo, sphereMat);
+        scene.add(sphereMesh);
+      });
+
+        
+      // Set the background color of the scene.
+      renderer.setClearColorHex(0x333F47, 1);  
+      renderer.render(scene, camera);
+            
+        // Create an event listener that resizes the renderer with the browser window.
+      window.addEventListener('resize', function() {
+            var WIDTH = window.innerWidth,
+            HEIGHT = window.innerHeight;
+            renderer.setSize(WIDTH, HEIGHT);
+            camera.aspect = WIDTH / HEIGHT;
+            camera.updateProjectionMatrix();
+            renderer.render(scene, camera);
+        });
+        
+     // Add OrbitControls so that we can pan around with the mouse.
+      controls = new THREE.OrbitControls(camera, renderer.domElement);  
+    }
+        
+  // Renders the scene and updates the render as needed.
+  function animate() {
+    requestAnimationFrame(animate);
+ 
+    // Render the scene.
+    renderer.render(scene, camera);
+    controls.update();
+ 
+  }
+        
+  init();
+  animate();
+        
+    </script>
+  </body>
+</html>
